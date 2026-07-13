@@ -7,8 +7,29 @@
 #include <fstream>
 #include <iomanip>
 #include <algorithm>
+#include <string>
+#include <sstream>
+#include <cmath>
+#include <stdexcept>
 using namespace std;
+/*
+ *Question 3 - User struct (also used in Q4 & Q5)
+ */
+struct User
+{
+    // long long to handle large IDs from CSV
+    long long id;
+    string first_name;
+    string last_name;
+    string username;
+    string department;
+    string location;
+};
 
+
+/*
+ * Question function declaration
+ */
 void question1();
 void question2();
 void question3();
