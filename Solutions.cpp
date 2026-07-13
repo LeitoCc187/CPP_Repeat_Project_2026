@@ -78,7 +78,21 @@ void question2()
 
  */
 void question3() {
-    cout << "Question 3" << endl;
+    User u;
+    u.id = 1001;
+    u.first_name = "John" ;
+    u.last_name = "Smith";
+    u.username = "jsmith";
+    u.department = "Engineering";
+    u.location = "Dublin";
+
+    cout << "User struct created with the following fields: " << endl;
+    cout << "  ID:          " << u.id << endl;
+    cout << "  First Name:  " << u.first_name << endl;
+    cout << "  Last Name:   " << u.last_name << endl;
+    cout << "  Username:    " << u.username << endl;
+    cout << "  Department:  " << u.department << endl;
+    cout << "  Location:    " << u.location << endl;
 }
 
 /*
