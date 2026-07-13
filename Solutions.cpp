@@ -1,12 +1,28 @@
 #include "Solutions.h"
 /*
+ * Global data store for Questions 4 & 5
+ * (persists between menu selections so Q5 can sort Q4's data)
+ */
+static vector<User*> userDatabase;
+
+/*
  *  1.	Write a function that accepts a std::list of integers and display the elements
  *      in reverse order using an appropriate iterator.
  *
  */
+void displayReverse(const list<int>& lst)
+{
+    cout << "Elements in reverse order: ";
+    for (list<int>::const_iterator it = lst.rbegin(); it != lst.end(); ++it) {
+        cout << *it << " ";
+    }
+    cout << endl;
+}
+
 void question1()
 {
-    cout << "Question 1" << endl;
+    list<int> numbers = {10,20,30,40,50,60};
+    displayReverse(numbers);
 }
 
 /*
@@ -14,10 +30,43 @@ void question1()
  *  2.	Write a function that will accept an array of strings and *  display them,
  *      one per line, in a border of stars ‘*’, with the text center-aligned. *
  */
+void displayInBorder(const string* arr, size_t size)
+{
+    if (size == 0 || arr == nullptr)
+    {
+        cout << "Empty array provided." << endl;
+        return;
+    }
+
+    // Find the longest string to determine box width
+    size_t maxLen = 0;
+    for (size_t i = 0; i < size; i++)
+    {
+        if (arr[i].length() > maxLen) maxLen = arr[i].length();
+    }
+
+    // Inner width includes 1 space padding on each side minimum
+    size_t innerWidth = maxLen + 2;
+    // +2 for the side stars
+    string border(innerWidth + 2, '*');
+
+    cout << border << endl;
+    for (size_t i = 0; i < size; i++)
+    {
+        size_t totalPadding = innerWidth - arr[i].length();
+        size_t leftPad = totalPadding / 2;
+        size_t rightPad = totalPadding - leftPad;
+        cout << '*' << string(leftPad, ' ') << arr[i] << string(rightPad, ' ') << '*' << endl;
+    }
+    cout << border << endl;
+}
+
 void question2()
 {
-    cout << "Question 2" << endl;
+    string phrases[] = {"Hello", "World", "C++ Programming", "Assignment"};
+    displayInBorder(phrases, 4);
 }
+
 /*
 *   3.	Create a struct to represent a User with the following fields.
             a.	Username
