@@ -13,7 +13,7 @@ static vector<User*> userDatabase;
 void displayReverse(const list<int>& lst)
 {
     cout << "Elements in reverse order: ";
-    for (list<int>::const_iterator it = lst.rbegin(); it != lst.end(); ++it) {
+    for (list<int>::const_reverse_iterator it = lst.crbegin(); it != lst.crend(); ++it) {
         cout << *it << " ";
     }
     cout << endl;
@@ -21,7 +21,7 @@ void displayReverse(const list<int>& lst)
 
 void question1()
 {
-    cout << "Question 4" << endl;
+    cout << "Question 1" << endl;
     list<int> numbers = {10,20,30,40,50,60};
     displayReverse(numbers);
 }
@@ -64,7 +64,7 @@ void displayInBorder(const string* arr, size_t size)
 
 void question2()
 {
-    cout << "Question 4" << endl;
+    cout << "Question 1" << endl;
     string phrases[] = {"Hello", "World", "C++ Programming", "Assignment"};
     displayInBorder(phrases, 4);
 }
@@ -113,7 +113,7 @@ void question4()
     }
     userDatabase.clear();
 
-    ifstream file("Data.csv");
+    ifstream file("..\\Data.csv");
     if (!file.is_open())
     {
         cerr << "Error: Could not open Data.csv" << endl;
@@ -193,6 +193,62 @@ void question4()
  */
 void question5() {
     cout << "Question 5" << endl;
+    if (userDatabase.empty()) {
+        cout << "No data loaded. Please run Question 4 first." << endl;
+        return;
+    }
+
+    cout << "Sort by:" << endl;
+    cout << "  1. Last Name" << endl;
+    cout << "  2. Department" << endl;
+    cout << "  3. Loaction" << endl;
+    cout << "  4. Username" << endl;
+    cout << "Enter choice (1-4): ";
+
+    int choice;
+    string input;
+    getline(cin, input);
+    stringstream(input) >> choice;
+
+    switch (choice) {
+        case 1:
+            sort(userDatabase.begin(), userDatabase.end(), [](User* a, User* b) {return a->last_name < b->last_name;});
+            cout << "Sorted by Last Name." << endl;
+            break;
+        case 2:
+            sort(userDatabase.begin(), userDatabase.end(), [](User* a, User* b) {return a->department < b->department;});
+            cout << "Sorted by Department." << endl;
+            break;
+        case 3:
+            sort(userDatabase.begin(), userDatabase.end(), [](User* a, User* b) {return a->location < b->location;});
+            cout << "Sorted by Location." << endl;
+            break;
+        case 4:
+            sort(userDatabase.begin(), userDatabase.end(), [](User* a, User* b) {return a->username < b->username;});
+            cout << "Sorted by Username." << endl;
+            break;
+        default:
+            cout << "Invalid choice." << endl;
+            return;
+    }
+
+    // Display sorted table
+    cout << left << setw(15) << "ID"
+    << setw(18) << "First Name"
+    << setw(18) << "Last Name"
+    << setw(20) << "Username"
+    << setw(30) << "Department"
+    << setw(18) << "Location" << endl;
+    cout << string(119, '-') << endl;
+
+    for (const User* u : userDatabase) {
+        cout << left << setw(15) << u->id
+        << setw(18) << u->first_name
+        << setw(18) << u->last_name
+        << setw(20) << u->username
+        << setw(30) << u->department
+        << setw(18) << u->location << endl;
+    }
 }
 /*
  *  6.    Write a recursive function to determine how many times a ball will bounce if it is dropped
