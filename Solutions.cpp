@@ -285,24 +285,107 @@ void question6() {
  *  7.	Write a function that will accept a pointer to a Dynamic array of characters and find the most
  *      common character. Pointer arithmetic MUST be used.
  */
+char mostCommonChar(const char* arr, size_t size) {
+    if (arr == nullptr || size == 0) {
+        return '\0';
+    }
+
+    int frequency[256] = {0}; // ASCII frequency table
+
+    // Pointer arithmetic used here: *(arr +i)
+    for (size_t i = 0; i < size; ++i) {
+        unsigned char c = static_cast<unsigned char>(*(arr + i));
+        frequency[c]++;
+    }
+
+    int maxFreq = 0;
+    char mostCommon = *arr;
+
+    for (size_t i = 0; i < size; ++i) {
+        unsigned char c = static_cast<unsigned char>(*(arr + i));
+        if (frequency[c] > maxFreq) {
+            maxFreq = frequency[c];
+            mostCommon = arr[c];
+        }
+    }
+
+    return mostCommon;
+}
+
 void question7() {
     cout << "Question 7" << endl;
+    size_t size;
+    string input;
+    cout << "Enter number of characters: ";
+    getline(cin, input);
+    stringstream(input) >> size;
+
+    if (size <= 0) {
+        cout << "Size must be greater than 0." << endl;
+        return;
+    }
+
+    // Dynamic array of characters
+    char* arr = new char[size];
+    cout << "Enter " << size << " Characters (no spaces): ";
+    for (size_t i = 0; i < size; ++i) {
+        cin >> arr[i];
+    }
+    cin.ignore(); // Clear newline after cin >>
+
+    char result = mostCommonChar(arr, size);
+    cout << "Most common character: '" << result << "'" << endl;
+
+    delete[] arr; // Good memory management
 }
 
 /*
  *8.	Write a function to encrypt a string using the Caesar cipher. You only need to consider
  *      the lower-case characters a-z. All other characters will remain as is.
  */
+string caesarEncrypt(const string& text, int shift) {
+    string result = text;
+    for (size_t i = 0; i < text.length(); ++i) {
+        if (result[i] >= 'a' && result[i] <= 'z') {
+            result[i] = 'a' + (result[i] - 'a' + shift) % 26;
+        }
+    }
+    return result;
+}
+
 void question8() {
     cout << "Question 8" << endl;
+    cout << "Enter text to encrypt (a-z only shifted): ";
+    string text;
+    getline(cin, text);
+
+    string encrypted = caesarEncrypt(text, 3);
+    cout << "Encrypted: " << encrypted << endl;
 }
 
 /*
  *   9.	Write a function to decrypt a string using the Caesar cipher. You only need to consider the
  *      lower-case characters a-z. All other characters will remain as is.
  */
+string caesarDecrypt(const string& text, int shift) {
+    string result = text;
+    for (size_t i = 0; i < text.length(); ++i) {
+        if (result[i] >= 'a' && result[i] <= 'z') {
+            // Add 26 before modulo to avoid negtive numbers
+            result[i] = 'a' + (result[i] - 'a' - shift + 26) % 26;
+        }
+    }
+    return result;
+}
+
 void question9() {
     cout << "Question 9" << endl;
+    cout << "Enter text to decrypt (a-z only shifted): ";
+    string text;
+    getline(cin, text);
+
+    string decrypted = caesarDecrypt(text, 3);
+    cout << "Decrypted: " << decrypted << endl;
 }
 /*
  *  10.	Create a class to represent a fraction. Each fraction should have a numerator and denominator.
