@@ -23,7 +23,7 @@ CPP_Repeat_Project_2026/
 
 ```bash
 # Clone the repository
-git clone https://github.com/delboy8080/CPP_Repeat_Project_2026.git
+git clone https://github.com/LeitoCc187/CPP_Repeat_Project_2026
 cd CPP_Repeat_Project_2026
 
 # Generate build files
@@ -131,6 +131,7 @@ Q4        |##############################  (60)
 
 ## Author
 
-- **Student:** delboy8080
+- **Student:** Cole Cumiskey
+- **Student Number:** D00281856
 - **Module:** C++ Repeat Project 2026
-- **Institution:** [Your College/University]
+- **Institution:** DKIT
