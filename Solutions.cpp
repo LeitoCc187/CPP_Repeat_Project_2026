@@ -255,9 +255,30 @@ void question5() {
  *      from a height X m, and  *reaches 2/3 of its previous height each bounce. (You may assume the ball
  *      has stopped when it reaches a height of less than 0.5m).
  */
+int countBounces(double height) {
+    // Base case: ball has stopped bouncing
+    if (height < 0.5) {
+        return 0;
+    }
+    // Recursive case: this bounce counts, plus future bounces from new height
+    return 1 + countBounces(height * 2.0 / 3.0);
+}
 
 void question6() {
-    cout << "Question 6" << endl;
+    cout << "Enter drop height (m): ";
+    double height;
+    string input;
+    getline(cin, input);
+    stringstream(input) >> height;
+
+    if (height <= 0) {
+        cout << "Height must be positive." << endl;
+        return;
+    }
+
+    int bounces = countBounces(height);
+    cout << "Ball dropped from " << height << "m will bounce "
+    << bounces << " times before reaching < 0.5m." << endl;
 }
 
 /*
