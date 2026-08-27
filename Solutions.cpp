@@ -21,6 +21,7 @@ void displayReverse(const list<int>& lst)
 
 void question1()
 {
+    cout << "Question 4" << endl;
     list<int> numbers = {10,20,30,40,50,60};
     displayReverse(numbers);
 }
@@ -63,6 +64,7 @@ void displayInBorder(const string* arr, size_t size)
 
 void question2()
 {
+    cout << "Question 4" << endl;
     string phrases[] = {"Hello", "World", "C++ Programming", "Assignment"};
     displayInBorder(phrases, 4);
 }
@@ -78,6 +80,7 @@ void question2()
 
  */
 void question3() {
+    cout << "Question 3" << endl;
     User u;
     u.id = 1001;
     u.first_name = "John" ;
@@ -100,8 +103,84 @@ void question3() {
  *      struct created in part 3 in the dynamic area of memory, store all the data, and then display
  *      the data from storage as a neatly formatted table.
  */
-void question4() {
+void question4()
+{
     cout << "Question 4" << endl;
+    //Good memory management: clear and previously loaded data first
+    for (User* u : userDatabase)
+    {
+        delete u;
+    }
+    userDatabase.clear();
+
+    ifstream file("Data.csv");
+    if (!file.is_open())
+    {
+        cerr << "Error: Could not open Data.csv" << endl;
+        return;
+    }
+
+    string line;
+    bool firstLine = true;
+    while (getline(file, line))
+    {
+        if (line.empty()) continue;
+
+        stringstream ss(line);
+        string token;
+        vector<string> tokens;
+        while (getline(ss, token, ','))
+        {
+            tokens.push_back(token);
+        }
+
+        if (tokens.size() < 6) continue;
+
+        // Skip header row
+        if (firstLine)
+        {
+            firstLine = false;
+            try
+            {
+                stoll(tokens[0]);
+            }
+            catch (...)
+            {
+                continue; // This line is a header
+            }
+        }
+
+        // Create User in dynamic memory (heap)
+        User* newUser = new User();
+        newUser->id = stoll(tokens[0]);
+        newUser->first_name = tokens[1];
+        newUser->last_name = tokens[2];
+        newUser->username = tokens[3];
+        newUser->department = tokens[4];
+        newUser->location = tokens[5];
+        userDatabase.push_back(newUser);
+    }
+    file.close();
+
+    // Display neatly formatted table
+    cout << left << setw(15) << "ID"
+        << setw(18) << "First Name"
+        << setw(18) << "Last Name"
+        << setw(20) << "Username"
+        << setw(30) << "Department"
+        << setw(18) << "Location" << endl;
+    cout << string(119, '-') << endl;
+
+    for (const User* u : userDatabase)
+    {
+        cout << left << setw(15) << u->id
+        << setw(18) << u->first_name
+        << setw(18) << u->last_name
+        << setw(20) << u->username
+        << setw(30) << u->department
+        << setw(18) << u->location << endl;
+    }
+    cout << "\nLoaded " << userDatabase.size() << " users from Data.csv" << endl;
 }
 
 /*
