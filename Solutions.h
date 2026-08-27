@@ -1,3 +1,4 @@
+#pragma once
 //
 // Created by floodd on 21/02/2024.
 //
@@ -74,6 +75,39 @@ struct GraphElement {
     GraphElement(const string& t, int v) : title(t), value(v) {};
 };
 
+/*
+ *Question 12 & 13 - BarChart class declaration
+ */
+class BarChart {
+    private:
+    GraphElement* elements; // Dynamic array (Q12a)
+    size_t elementCount;
+    size_t capacity;
+    string title; // Q12b
+
+    void resize(); // Helper to grow dynamic array
+
+    public:
+    BarChart(); // Default constructor
+    BarChart(const string& chartTitle); // Only Title constructor
+    BarChart(const string& chartTitle, size_t initialCapacity); // Full constructor
+    BarChart(const BarChart& other); // Copy constructor
+    ~BarChart(); // Destructor
+    BarChart& operator=(const BarChart& other); // Assignment operator
+
+    // Getters & setters (Q12)
+    string getTitle() const;
+    size_t getSize() const;
+    GraphElement getElement(size_t index) const;
+
+    void setTitle(const string& newTitle);
+    void setElement(size_t index, const GraphElement& ge);
+    void addElement(const GraphElement& ge);
+
+    // Draw function (Q13)
+    void draw() const;
+};
+
 
 /*
  * Question function declaration
@@ -91,4 +125,3 @@ void question10();
 void question11();
 void question12();
 void question13();
-

@@ -1,6 +1,5 @@
 #include "Solutions.h"
 
-#include <ranges>
 /*
  * Global data store for Questions 4 & 5
  * (persists between menu selections so Q5 can sort Q4's data)
@@ -66,7 +65,7 @@ void displayInBorder(const string* arr, size_t size)
 
 void question2()
 {
-    cout << "Question 1" << endl;
+    cout << "Question 2" << endl;
     string phrases[] = {"Hello", "World", "C++ Programming", "Assignment"};
     displayInBorder(phrases, 4);
 }
@@ -307,7 +306,7 @@ char mostCommonChar(const char* arr, size_t size) {
         unsigned char c = static_cast<unsigned char>(*(arr + i));
         if (frequency[c] > maxFreq) {
             maxFreq = frequency[c];
-            mostCommon = arr[c];
+            mostCommon = static_cast<char>(c);
         }
     }
 
@@ -467,9 +466,9 @@ void question10() {
 
     // Setters
     f2.setNumerator(9);
-    cout << "After setNumerator(9)" << f2 << endl;
+    cout << "After setNumerator(9): " << f2 << endl;
     f2.setDenominator(12);
-    cout << "After setDenominator(12)" << f2 << endl;
+    cout << "After setDenominator(12): " << f2 << endl;
 }
 /*
 *  11.	For the class fraction overload the following operators:
@@ -493,7 +492,7 @@ Fraction Fraction::operator*(const Fraction& other) const {
 }
 
 Fraction Fraction::operator/(const Fraction& other) const {
-    if (denominator == 0) {
+    if (other.numerator == 0) {
         throw invalid_argument("Cannot divide by a fraction with numerator zero.");
     }
     return Fraction(numerator * other.denominator, denominator * other.numerator);
@@ -537,10 +536,10 @@ void question11() {
     cout << "f1 + f2 = " << (f1 + f2)<< endl;
     cout << "f1 - f2 = " << (f1 - f2)<< endl;
     cout << "f2 * f1 = " << (f2 * f1)<< endl;
-    cout << "f2 / f2 = " << (f2 / f2)<< endl;
+    cout << "f1 / f2 = " << (f1 / f2)<< endl;
     cout << "f1 > f2 = " << (f1 > f2 ? "true" : "false")<< endl;
     cout << "f1 < f2 = " << (f1 < f2 ? "true" : "false")<< endl;
-    cout << "f1 == f2 = " << (f2 == f1 ? "true" : "false")<< endl;
+    cout << "f1 == f2 = " << (f1 == f2 ? "true" : "false")<< endl;
 
     // Stream extraction test
     stringstream ss("5/8");
@@ -570,16 +569,164 @@ void BarChart::resize() {
     capacity = newCapacity;
 }
 
-void question12() {
-    cout << "Question 12" << endl;
+BarChart::BarChart() : elements(nullptr), elementCount(0), capacity(0), title("") {
+    capacity = 2;
+    elements = new GraphElement[capacity];
 }
 
+BarChart::BarChart(const string& chartTitle) : elements(nullptr), elementCount(0), capacity(2), title(chartTitle) {
+    elements = new GraphElement[capacity];
+}
+
+BarChart::BarChart(const string& chartTitle, size_t initialCapacity) : elements(nullptr), elementCount(0), capacity(initialCapacity), title(chartTitle) {
+    if (capacity == 0) capacity = 2;
+    elements = new GraphElement[capacity];
+}
+
+// Copy constructor (deep copy)
+BarChart::BarChart(const BarChart& other) : elements(new GraphElement[other.capacity]), elementCount(other.elementCount), capacity(other.capacity), title(other.title) {
+    for (size_t i = 0; i < elementCount; i++) {
+        elements[i] = other.elements[i];
+    }
+}
+
+BarChart::~BarChart() {
+    delete[] elements; // Good memory management
+}
+
+// Assignment operator (deep copy)
+BarChart& BarChart::operator=(const BarChart& other) {
+    if (this != &other) { // Self-assignment check
+        delete[] elements;
+        capacity = other.capacity;
+        elementCount = other.elementCount;
+        title = other.title;
+        elements = new GraphElement[capacity];
+        for (size_t i = 0; i < elementCount; i++) {
+            elements[i] = other.elements[i];
+        }
+    }
+    return *this;
+}
+
+string BarChart::getTitle() const {
+    return title;
+}
+
+size_t BarChart::getSize() const {
+    return elementCount;
+}
+
+GraphElement BarChart::getElement(size_t index) const {
+    if (index >= elementCount) {
+        throw out_of_range("Index out of bounds.");
+    }
+    return elements[index];
+}
+
+void BarChart::setTitle(const string& newTitle) {
+    title = newTitle;
+}
+
+void BarChart::setElement(size_t index, const GraphElement& ge) {
+    if (index >= elementCount) {
+        throw out_of_range("Index out of bounds.");
+    }
+    elements[index] = ge;
+}
+
+void BarChart::addElement(const GraphElement& ge) {
+    if (elementCount >= capacity) {
+        resize();
+    }
+    elements[elementCount++] = ge;
+}
+
+void question12() {
+    cout << "Question 12" << endl;
+    cout << "--- Testing BarChart class ---" << endl;
+
+    // Default
+    BarChart chart1;
+    chart1.setTitle("Default Chart");
+    chart1.addElement(GraphElement{"A", 10});
+    chart1.addElement(GraphElement{"B", 20});
+
+    cout << "Chart 1 title: " << chart1.getTitle() << endl;
+    cout << "Chart 1 size: " << chart1.getSize() << endl;
+    cout << "Element 0: " << chart1.getElement(0).title << " = " << chart1.getElement(0).value << endl;
+
+    // Full constructor
+    BarChart chart2("Full Constructir Chart", 5);
+    chart2.addElement(GraphElement{"X", 30});
+    cout << "Chart 2 title: " << chart2.getTitle() << endl;
+
+    // Copy constructor (deep copy)
+    BarChart copyChart = chart1;
+    cout << "Copy chart title: " << copyChart.getTitle() << endl;
+    cout << "Copy chart size: " << copyChart.getSize() << endl;
+
+    // Assignment operator (deep copy)
+    BarChart assignedChart;
+    assignedChart = chart1;
+    cout << "Assigned chart title: " << assignedChart.getTitle() << endl;
+    cout << "Assigned chart size: " << assignedChart.getSize() << endl;
+
+    // Test setter
+    assignedChart.setElement(0, GraphElement{"Modified", 99});
+    cout << "After setElement(0) on assignedChart:" << endl;
+    cout << "  assignedChart[0]: " << assignedChart.getElement(0).title << " = " << assignedChart.getElement(0).value << endl;
+    cout << "  chart1[0] (unchanged): " << chart1.getElement(0).title << " = " << chart1.getElement(0).value << endl;
+}
 
 /*
  *  13.	Add a function to the class “BarChart” that will draw a visual representation of
  *  the data in the array. See Below for a sample output.
  */
+void BarChart::draw() const {
+    if (elementCount == 0) {
+        cout << "Empty BarChart. Noting to draw." << endl;
+        return;
+    }
+
+    // find max value and longest label from formatting
+    int maxValue = 0;
+    size_t maxLabelLen = 0;
+    for (size_t i = 0; i < elementCount; i++) {
+        if (elements[i].value > maxValue) maxValue = elements[i].value;
+        if (elements[i].title.length() > maxLabelLen) maxLabelLen = elements[i].title.length();
+    }
+
+    cout << "\n" << title << endl;
+    cout << string(title.length(), '=') << endl;
+    const int Max_BAR_WIDTH = 40;
+    for (size_t i = 0; i < elementCount; i++) {
+        cout << left << setw(maxLabelLen + 2) << elements[i].title << "|";
+        int barLength = (maxValue > 0) ? (elements[i].value * Max_BAR_WIDTH / maxValue) : 0;
+        cout << string(barLength, '#') <<  " (" << elements[i].value << ")" << endl;
+    }
+    cout << endl;
+}
 
 void question13() {
     cout << "Question 13" << endl;
+    cout << "--- Testing BarChart::draw() ---" << endl;
+
+    BarChart chart("Quarterly Sales");
+    chart.addElement(GraphElement("Q1", 45));
+    chart.addElement(GraphElement("Q2", 80));
+    chart.addElement(GraphElement("Q3", 35));
+    chart.addElement(GraphElement("Q4", 60));
+    chart.draw();
+
+    // Demonstrate copy constructor works with draw
+    BarChart copiedChart = chart;
+    copiedChart.setTitle("Copied Chart (copy Constructor)");
+    copiedChart.draw();
+
+    // Demonstrate assignment operator works with draw
+    BarChart assignedChart;
+    assignedChart = chart;
+    assignedChart.setTitle("Assigned Chart (= Operator)");
+    assignedChart.draw();
 }
