@@ -1,4 +1,6 @@
 #include "Solutions.h"
+
+#include <ranges>
 /*
  * Global data store for Questions 4 & 5
  * (persists between menu selections so Q5 can sort Q4's data)
@@ -393,8 +395,81 @@ void question9() {
  *
  *      Test your class here.
  */
+// Fraction class implementation
+
+int Fraction::gcd(int a, int b) const {
+    a = abs(a);
+    b = abs(b);
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+void Fraction::simplify() {
+    // Ensure denominator is always positive
+    if (denominator < 0) {
+        numerator = -numerator;
+        denominator = -denominator;
+    }
+    int g = gcd(numerator, denominator);
+    if (g != 0) {
+        numerator /= g;
+        denominator /= g;
+    }
+    if (numerator == 0) {
+        denominator = 1;
+    }
+}
+
+Fraction::Fraction() : numerator(0), denominator(1) {}
+
+Fraction::Fraction(int num, int den) : numerator(num), denominator(den) {
+    if (den == 0) {
+        throw invalid_argument("Denominator cannot be zero.");
+    }
+    simplify();
+}
+
+int Fraction::getNumerator() const {return numerator;}
+int Fraction::getDenominator() const {return denominator;}
+
+void Fraction::setNumerator(int num) {
+    numerator = num;
+    simplify();
+}
+
+void Fraction::setDenominator(int den) {
+    if (den == 0) {
+        throw invalid_argument("Denominator cannot be zero.");
+    }
+    denominator = den;
+    simplify();
+}
+
 void question10() {
     cout << "Question 10" << endl;
+    cout << "--- Testing Fraction Class --" << endl;
+
+    // Default constructor
+    Fraction f1;
+    cout << "Default fraction: " << f1 << endl;
+
+    // Full constructor
+    Fraction f2(6, 8); // Should simplify to 3/4
+    cout << "Fraction(6, 8) simplified: " << f2 << endl;
+
+    // Getters
+    cout << "Numerator: " << f2.getNumerator() << endl;
+    cout << "Denominator: " << f2.getDenominator() << endl;
+
+    // Setters
+    f2.setNumerator(9);
+    cout << "After setNumerator(9)" << f2 << endl;
+    f2.setDenominator(12);
+    cout << "After setDenominator(12)" << f2 << endl;
 }
 /*
 *  11.	For the class fraction overload the following operators:
@@ -405,9 +480,73 @@ void question10() {
         Test your class here.
 
  */
+Fraction Fraction::operator+(const Fraction& other) const {
+    return Fraction(numerator * other.denominator + other.numerator * denominator, denominator * other.denominator);
+}
+
+Fraction Fraction::operator-(const Fraction& other) const {
+    return Fraction(numerator * other.denominator - other.numerator * denominator, denominator * other.denominator);
+}
+
+Fraction Fraction::operator*(const Fraction& other) const {
+    return Fraction(numerator * other.numerator, denominator * other.denominator);
+}
+
+Fraction Fraction::operator/(const Fraction& other) const {
+    if (denominator == 0) {
+        throw invalid_argument("Cannot divide by a fraction with numerator zero.");
+    }
+    return Fraction(numerator * other.denominator, denominator * other.numerator);
+}
+
+bool Fraction::operator>(const Fraction& other) const {
+    return numerator * other.denominator > other.numerator * denominator;
+}
+
+bool Fraction::operator<(const Fraction& other) const {
+    return numerator * other.denominator < other.numerator * denominator;
+}
+
+bool Fraction::operator==(const Fraction& other) const {
+    return numerator == other.numerator && denominator == other.denominator;
+}
+
+ostream& operator<<(ostream& os, const Fraction& frac) {
+    os << frac.numerator << "/" << frac.denominator;
+    return os;
+}
+
+istream& operator>>(istream& is, Fraction& frac) {
+    char slash;
+    is >> frac.numerator >> slash >> frac.denominator;
+    if (frac.denominator == 0) {
+        throw invalid_argument("Denominator cannot be zero.");
+    }
+    frac.simplify();
+    return is;
+}
 
 void question11() {
     cout << "Question 11" << endl;
+    cout << "--- Testing Fraction operators ---" << endl;
+
+    Fraction f1(3, 4);
+    Fraction f2(1, 3);
+
+    cout << "f1 = " << f1 << ", f2 = " << f2 << endl;
+    cout << "f1 + f2 = " << (f1 + f2)<< endl;
+    cout << "f1 - f2 = " << (f1 - f2)<< endl;
+    cout << "f2 * f1 = " << (f2 * f1)<< endl;
+    cout << "f2 / f2 = " << (f2 / f2)<< endl;
+    cout << "f1 > f2 = " << (f1 > f2 ? "true" : "false")<< endl;
+    cout << "f1 < f2 = " << (f1 < f2 ? "true" : "false")<< endl;
+    cout << "f1 == f2 = " << (f2 == f1 ? "true" : "false")<< endl;
+
+    // Stream extraction test
+    stringstream ss("5/8");
+    Fraction f3;
+    ss >> f3;
+    cout << "Stream extracted: " << f3 << endl;
 }
 
 /*
@@ -420,10 +559,17 @@ void question11() {
     Use the struct defined below and test class here.
 
  */
-struct GraphElement {
-    string title;
-    int value;
-};
+void BarChart::resize() {
+    size_t newCapacity = (capacity == 0) ? 2 : capacity * 2;
+    GraphElement* newArray = new GraphElement[newCapacity];
+    for (size_t i = 0; i < elementCount; i++) {
+        newArray[i] = elements[i];
+    }
+    delete[] elements; // Good memory management: delete old array
+    elements = newArray;
+    capacity = newCapacity;
+}
+
 void question12() {
     cout << "Question 12" << endl;
 }
